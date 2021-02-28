@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
  * This class will command a basic mecanum drive, the code is a bit gross mainly cause segmenting it too much
  * would result in too much abstraction and the thus less readability
  *
+ * Formulas Yoinked From: https://www.chiefdelphi.com/uploads/default/original/3X/9/7/97ee2e1cf47de3259638efca7f14c838bc702875.pdf
+ *
  * @author Will Richards
  */
 @TeleOp(name = "MecanumOpMode", group = "Test")
@@ -39,10 +41,10 @@ public class MecanumOpMode extends BaseOpMode {
         clockwiseRotation = turnSensitivity * gamepad1.right_stick_x;
 
         // Basic mecanum drive
-        nonFieldCentricControl();
+        //nonFieldCentricControl();
 
         // AFTER NON FIELD CENTRIC is working try to get field centric to work and read the comments for each of the methods
-        //fieldCentricControl(true);
+        fieldCentricControl(false);
     }
 
     /**
@@ -67,6 +69,7 @@ public class MecanumOpMode extends BaseOpMode {
     public void fieldCentricControl(boolean gyroClockwise){
         double temp;
         double theta = super.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        super.telemetry.addData("Corrected Angle", convertAngle(theta));
         if(gyroClockwise){
             temp = forwardVector*Math.cos(theta) - rightVector*Math.sin(theta);
             rightVector = -forwardVector*Math.sin(theta) + rightVector*Math.cos(theta);
@@ -111,5 +114,22 @@ public class MecanumOpMode extends BaseOpMode {
 
         double[] normalizedSpeedArray = {front_left, front_right, back_left, back_right};
         return normalizedSpeedArray;
+    }
+
+    /**
+     * Convert the gyro angle into a standard 0-360 value
+     * @return angle between 0-360
+     */
+    public double convertAngle(double angle){
+        if (angle == 0){
+            return 0;
+        }
+        else if (angle > 0 && angle <= 180){
+            return  angle;
+        }
+        else if(angle >=-180){
+            return 360-Math.abs(angle);
+        }
+        return angle;
     }
 }
