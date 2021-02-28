@@ -50,7 +50,7 @@ public class MecanumOpMode extends BaseOpMode {
     /**
      * Non-Field centric drive is where all directions are relative to the robot as opposed to the driver, this means that when the robot's direction is
      * inverted left becomes right and vice-versa. This is annoying and thus field centric drive makes all directions relative to the driver and thus right will always be right and vice-versa
-     * GET WORKING BEFORE trying fieldCentric
+     * GET WORKING BEFORE trying fieldCentric ds
      */
     public void nonFieldCentricControl(){
         double[] motorValues = normalizeWheelSpeeds();
