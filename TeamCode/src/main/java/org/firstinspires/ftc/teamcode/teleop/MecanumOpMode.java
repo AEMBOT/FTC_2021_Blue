@@ -24,21 +24,31 @@ public class MecanumOpMode extends BaseOpMode {
      * This adjusts the rotate sensitivity
      * Begin adjusting after strafing works
      */
-    private final double turnSensitivity = 0;
+    private final double turnSensitivity = .7;
 
     // Variables to store controller values to be used in calculations
     private double forwardVector;
     private double rightVector;
     private double clockwiseRotation;
 
+    private boolean pressed;
+    private double speedMultiplier = 1;
+
     @Override
     public void loop() {
         // Invert the Y axis cause it reads them inverted by default
-        forwardVector = -gamepad1.left_stick_y; // Forward
-        rightVector = gamepad1.left_stick_x; // Strafing
+        forwardVector = gamepad1.left_stick_y; // Forward
+        rightVector = -gamepad1.left_stick_x; // Strafing
 
         // Robot rotation is controlled by the right stick which is scaled by the turnSensitivity constant
-        clockwiseRotation = turnSensitivity * gamepad1.right_stick_x;
+        clockwiseRotation = turnSensitivity * -gamepad1.right_stick_x;
+
+        if(isPressed(gamepad1.a)){
+            if(speedMultiplier == 1) speedMultiplier = 0.5;
+
+            else speedMultiplier = 1;
+        }
+
 
         // Basic mecanum drive
         //nonFieldCentricControl();
@@ -68,10 +78,9 @@ public class MecanumOpMode extends BaseOpMode {
      */
     public void fieldCentricControl(boolean gyroClockwise){
         double temp;
-        double theta = super.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        super.telemetry.addData("Corrected Angle", convertAngle(theta));
+        double theta = Math.toRadians(super.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         if(gyroClockwise){
-            temp = forwardVector*Math.cos(theta) - rightVector*Math.sin(theta);
+            temp = forwardVector*Math.cos(theta) + rightVector*Math.sin(theta);
             rightVector = -forwardVector*Math.sin(theta) + rightVector*Math.cos(theta);
             forwardVector = temp;
         }else{
@@ -83,10 +92,10 @@ public class MecanumOpMode extends BaseOpMode {
         double[] motorValues = normalizeWheelSpeeds();
 
         // Set the motors to run at the required powers
-        super.frontLeft.setPower(motorValues[0]);
-        super.frontRight.setPower(motorValues[1]);
-        super.backLeft.setPower(motorValues[2]);
-        super.backRight.setPower(motorValues[3]);
+        super.frontLeft.setPower(motorValues[0]*speedMultiplier);
+        super.frontRight.setPower(motorValues[1]*speedMultiplier);
+        super.backLeft.setPower(motorValues[2]*speedMultiplier);
+        super.backRight.setPower(motorValues[3]*speedMultiplier);
     }
 
     /**
@@ -116,20 +125,13 @@ public class MecanumOpMode extends BaseOpMode {
         return normalizedSpeedArray;
     }
 
-    /**
-     * Convert the gyro angle into a standard 0-360 value
-     * @return angle between 0-360
-     */
-    public double convertAngle(double angle){
-        if (angle == 0){
-            return 0;
+    public boolean isPressed(boolean pressed) {
+        if (this.pressed) {
+            this.pressed = pressed;
+            return false;
+        } else {
+            this.pressed = pressed;
+            return pressed;
         }
-        else if (angle > 0 && angle <= 180){
-            return  angle;
-        }
-        else if(angle >=-180){
-            return 360-Math.abs(angle);
-        }
-        return angle;
     }
 }
