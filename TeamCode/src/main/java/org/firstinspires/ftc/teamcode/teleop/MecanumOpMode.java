@@ -51,10 +51,10 @@ public class MecanumOpMode extends BaseOpMode {
 
 
         // Basic mecanum drive
-        //nonFieldCentricControl();
+        nonFieldCentricControl();
 
         // AFTER NON FIELD CENTRIC is working try to get field centric to work and read the comments for each of the methods
-        fieldCentricControl(false);
+        // fieldCentricControl(false);
     }
 
     /**
@@ -66,10 +66,10 @@ public class MecanumOpMode extends BaseOpMode {
         double[] motorValues = normalizeWheelSpeeds();
 
         // Set the motors to run at the required powers
-        super.frontLeft.setPower(motorValues[0]);
-        super.frontRight.setPower(motorValues[1]);
-        super.backLeft.setPower(motorValues[2]);
-        super.backRight.setPower(motorValues[3]);
+        super.frontLeft.setPower(motorValues[0]*speedMultiplier);
+        super.frontRight.setPower(motorValues[1]*speedMultiplier);
+        super.backLeft.setPower(motorValues[2]*speedMultiplier);
+        super.backRight.setPower(motorValues[3]*speedMultiplier);
     }
 
     /**
