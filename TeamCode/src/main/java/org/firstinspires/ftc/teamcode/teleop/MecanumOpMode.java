@@ -24,7 +24,7 @@ public class MecanumOpMode extends BaseOpMode {
      * This adjusts the rotate sensitivity
      * Begin adjusting after strafing works
      */
-    private final double turnSensitivity = .7;
+    private final double turnSensitivity = .8;
 
     // Variables to store controller values to be used in calculations
     private double forwardVector;
