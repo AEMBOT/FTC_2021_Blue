@@ -15,6 +15,8 @@ public abstract class BaseOpMode extends OpMode {
     protected DcMotor frontRight;
     protected DcMotor backLeft;
     protected DcMotor backRight;
+    protected DcMotor flyLeft;
+    protected DcMotor flyRight;
 
     protected BNO055IMU imu;
 
@@ -26,6 +28,8 @@ public abstract class BaseOpMode extends OpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+        //flyLeft = hardwareMap.get(DcMotor.class, "FlyLeft");
+        //flyRight = hardwareMap.get(DcMotor.class, "FlyRight");
 
         // Create and set the IMU parameters to be used when retrieving angle information.
         BNO055IMU.Parameters imuParams = new BNO055IMU.Parameters();

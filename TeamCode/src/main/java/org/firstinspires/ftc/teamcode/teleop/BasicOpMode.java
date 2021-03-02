@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -9,25 +8,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.BaseOpMode;
 
 /**
- * This class will command a basic mecanum drive, the code is a bit gross mainly cause segmenting it too much
- * would result in too much abstraction and the thus less readability
- *
  * Formulas Yoinked From: https://www.chiefdelphi.com/uploads/default/original/3X/9/7/97ee2e1cf47de3259638efca7f14c838bc702875.pdf
  *
  * @author Will Richards
  */
+@TeleOp(name = "BasicOpMode", group = "Test")
+public class BasicOpMode extends BaseOpMode {
 
-@Disabled
-
-@TeleOp(name = "MecanumOpMode", group = "Test")
-public class MecanumOpMode extends BaseOpMode {
-
-    /**
-     * THIS IS A TUNING CONSTANT
-     * Increase very slowly (DO NOT EXCEED 1)
-     * This adjusts the rotate sensitivity
-     * Begin adjusting after strafing works
-     */
     private final double turnSensitivity = .8;
 
     // Variables to store controller values to be used in calculations
@@ -37,6 +24,9 @@ public class MecanumOpMode extends BaseOpMode {
 
     private boolean pressed;
     private double speedMultiplier = 1;
+
+    private boolean shooterOn = false;
+    private double flywheelSpeed = 1;
 
     @Override
     public void loop() {
@@ -54,26 +44,44 @@ public class MecanumOpMode extends BaseOpMode {
             else speedMultiplier = 1;
         }
 
+        if(isPressed(gamepad1.x)){
+
+            shooterOn = !shooterOn;
+        }
+
+        if(shooterOn) {
+
+            flyLeft.setPower(flywheelSpeed);
+            flyRight.setPower(flywheelSpeed);
+
+        }
+
+        else{
+
+            flyLeft.setPower(0);
+            flyRight.setPower(0);
+
+        }
+
         // Basic mecanum drive
-        nonFieldCentricControl();
+        //nonFieldCentricControl();
 
         // AFTER NON FIELD CENTRIC is working try to get field centric to work and read the comments for each of the methods
-        // fieldCentricControl(false);
+        fieldCentricControl(false);
     }
 
     /**
      * Non-Field centric drive is where all directions are relative to the robot as opposed to the driver, this means that when the robot's direction is
      * inverted left becomes right and vice-versa. This is annoying and thus field centric drive makes all directions relative to the driver and thus right will always be right and vice-versa
-     * GET WORKING BEFORE trying fieldCentric ds
      */
     public void nonFieldCentricControl(){
         double[] motorValues = normalizeWheelSpeeds();
 
         // Set the motors to run at the required powers
-        super.frontLeft.setPower(motorValues[0]*speedMultiplier);
-        super.frontRight.setPower(motorValues[1]*speedMultiplier);
-        super.backLeft.setPower(motorValues[2]*speedMultiplier);
-        super.backRight.setPower(motorValues[3]*speedMultiplier);
+        super.frontLeft.setPower(motorValues[0]);
+        super.frontRight.setPower(motorValues[1]);
+        super.backLeft.setPower(motorValues[2]);
+        super.backRight.setPower(motorValues[3]);
     }
 
     /**
