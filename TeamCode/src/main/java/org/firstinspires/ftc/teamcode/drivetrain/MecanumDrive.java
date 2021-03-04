@@ -28,31 +28,6 @@ public class MecanumDrive {
     public MecanumDrive(DcMotor[] driveMotors){
         this.driveMotors = driveMotors;
     }
-    /**
-     * Normalize the wheel speeds to be less than 1 but scaled such that the differences remain
-     * @return list of wheel speeds to feed into the motors
-     */
-    public double[] normalizeWheelSpeeds(double FWD, double STR, double RCW){
-        double front_left = FWD + RCW + STR;
-        double front_right = FWD - RCW - STR;
-        double back_left =  FWD + RCW - STR;
-        double back_right = FWD - RCW + STR;
-
-        double max = Math.abs(front_left);
-        if(Math.abs(front_right)>max) max = Math.abs(front_right);
-        if(Math.abs(back_left)>max) max = Math.abs(back_left);
-        if(Math.abs(back_right)>max) max = Math.abs(back_right);
-
-        // Reduce the max value to less than 1
-        if(max> 1){
-            front_left/=max;
-            front_right/=max;
-            back_left/=max;
-            back_right/=max;
-        }
-
-        return new double[]{front_left, front_right, back_left, back_right};
-    }
 
     /**
      * Non-Field centric drive is where all directions are relative to the robot as opposed to the driver, this means that when the robot's direction is
@@ -77,13 +52,18 @@ public class MecanumDrive {
      * @param theta the current gyro angle
      */
     public void fieldCentricControl(double FWD, double STR, double RCW, double theta){
+        // Temp variable so the true value of FWD can still be used in the calculations
+        double temp;
+        // Convert normal joystick inputs to ones that match the values we need
         STR = -STR;
         RCW = -RCW * TURN_SENSITIVITY;
-        double temp;
+
+        // This math assumes our gyro updates counter clockwise
         temp = FWD*Math.cos(theta) - STR*Math.sin(theta);
         STR = FWD*Math.sin(theta) + STR*Math.cos(theta);
         FWD = temp;
 
+        // Calculate the wheel speed vectors and normalize all of them to be less than one
         double[] motorValues = normalizeWheelSpeeds(FWD, STR, RCW);
 
         // Loop through the motors values and supply the correct power to the correct motor
@@ -100,5 +80,31 @@ public class MecanumDrive {
             speedMultiplier = 0.5;
         else
             speedMultiplier = 1;
+    }
+
+    /**
+     * Normalize the wheel speeds to be less than 1 but scaled such that the differences remain
+     * @return list of wheel speeds to feed into the motors
+     */
+    public double[] normalizeWheelSpeeds(double FWD, double STR, double RCW){
+        double front_left = FWD + RCW + STR;
+        double front_right = FWD - RCW - STR;
+        double back_left =  FWD + RCW - STR;
+        double back_right = FWD - RCW + STR;
+
+        double max = Math.abs(front_left);
+        if(Math.abs(front_right)>max) max = Math.abs(front_right);
+        if(Math.abs(back_left)>max) max = Math.abs(back_left);
+        if(Math.abs(back_right)>max) max = Math.abs(back_right);
+
+        // Reduce the max value to less than 1
+        if(max> 1){
+            front_left/=max;
+            front_right/=max;
+            back_left/=max;
+            back_right/=max;
+        }
+
+        return new double[]{front_left, front_right, back_left, back_right};
     }
 }
