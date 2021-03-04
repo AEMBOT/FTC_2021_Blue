@@ -5,6 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.utilities.TeleopControl;
+
 /**
  * BaseOpMode abstract class that all other OpModes should extend from to allow easy initialization in one place
  */
@@ -15,10 +21,16 @@ public abstract class BaseOpMode extends OpMode {
     protected DcMotor frontRight;
     protected DcMotor backLeft;
     protected DcMotor backRight;
+
+    protected DcMotor[] driveMotorArray;
+
     protected DcMotor flyLeft;
     protected DcMotor flyRight;
 
     protected BNO055IMU imu;
+
+    protected TeleopControl teleop;
+    protected MecanumDrive mecanumDrive;
 
     @Override
     public void init() {
@@ -28,8 +40,18 @@ public abstract class BaseOpMode extends OpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+
+        // Create an array of the drive motors to easily pass into sub-methods
+        driveMotorArray = new DcMotor[]{frontLeft, frontRight, backLeft, backRight};
+
         //flyLeft = hardwareMap.get(DcMotor.class, "FlyLeft");
         //flyRight = hardwareMap.get(DcMotor.class, "FlyRight");
+
+        // Control method that allows easier use of button inputs
+        teleop = new TeleopControl();
+
+        // Handles control of the mecanum drive base
+        mecanumDrive = new MecanumDrive(driveMotorArray);
 
         // Create and set the IMU parameters to be used when retrieving angle information.
         BNO055IMU.Parameters imuParams = new BNO055IMU.Parameters();
@@ -51,5 +73,13 @@ public abstract class BaseOpMode extends OpMode {
         // Invert the right side
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    /**
+     * Get the angle of the robot via the gyro scope (in radians)
+     * @return the angle of the robot
+     */
+    public double getGyroYaw(){
+        return Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
     }
 }
