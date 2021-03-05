@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class TeleopControl {
 
-    // Signifies wheather or not its the first loop of the teleop periodic, used to
+    // Signifies weather or not its the first loop of the teleop periodic, used to
     // init all the values
     private boolean firstLoop = true;
 

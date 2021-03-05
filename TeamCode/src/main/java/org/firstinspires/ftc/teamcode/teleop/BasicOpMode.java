@@ -11,8 +11,9 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
 @TeleOp(name = "BasicOpMode", group = "Test")
 public class BasicOpMode extends BaseOpMode {
 
+    private boolean intakeOn = false;
     private boolean shooterOn = false;
-    private double flywheelSpeed = 1;
+    private double flywheelSpeed = .8;
 
     @Override
     public void loop() {
@@ -21,6 +22,9 @@ public class BasicOpMode extends BaseOpMode {
 
         // Toggles the shooter on or off
         teleop.runOncePerPress(gamepad1.x, () -> shooterOn = !shooterOn);
+
+        // Toggles the intake on or off
+        teleop.runOncePerPress(gamepad1.y, () -> intakeOn = !intakeOn);
 
         if(shooterOn) {
             flyLeft.setPower(flywheelSpeed);
@@ -32,8 +36,22 @@ public class BasicOpMode extends BaseOpMode {
             flyRight.setPower(0);
         }
 
+        if(intakeOn) {
+          intakeLeft.setPower(1);
+          intakeRight.setPower(1);
+        }
+
+        else{
+            intakeLeft.setPower(0);
+            intakeRight.setPower(0);
+        }
+
+        wobbleArm.setPower(.4*gamepad2.right_stick_y);
+
         // Send commands to the mecanum drive base
-        super.mecanumDrive.fieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, getGyroYaw());
+        // mecanumDrive.fieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, getGyroYaw());
+
+        mecanumDrive.nonFieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         // Leave this here as it resets all the values for the next loop
         super.teleop.endPeriodic();

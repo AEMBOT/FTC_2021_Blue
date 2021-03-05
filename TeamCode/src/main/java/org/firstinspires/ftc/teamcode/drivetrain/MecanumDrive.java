@@ -42,10 +42,11 @@ public class MecanumDrive {
         for (int i=0; i<motorValues.length;i++){
             driveMotors[i].setPower(motorValues[i]*speedMultiplier);
         }
+
     }
 
     /**
-     * Allows for field centric driving relative to where the robot was inited on
+     * Allows for field centric driving relative to where the robot was initialized on
      * @param FWD the forward joystick input
      * @param STR the strafe joystick input
      * @param RCW the rotational joystick input
@@ -89,8 +90,8 @@ public class MecanumDrive {
     public double[] normalizeWheelSpeeds(double FWD, double STR, double RCW){
         double front_left = FWD + RCW + STR;
         double front_right = FWD - RCW - STR;
-        double back_left =  FWD + RCW - STR;
-        double back_right = FWD - RCW + STR;
+        double back_left =  (FWD + RCW - STR)*.75;
+        double back_right = (FWD - RCW + STR)*.75;
 
         double max = Math.abs(front_left);
         if(Math.abs(front_right)>max) max = Math.abs(front_right);

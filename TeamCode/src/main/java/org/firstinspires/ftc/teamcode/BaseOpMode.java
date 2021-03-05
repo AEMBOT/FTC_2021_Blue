@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -24,8 +26,16 @@ public abstract class BaseOpMode extends OpMode {
 
     protected DcMotor[] driveMotorArray;
 
+    // Generic DcMotors to command the 2 shooter wheels
     protected DcMotor flyLeft;
     protected DcMotor flyRight;
+
+    // Generic DcMotor to command the wobble arm
+    protected DcMotor wobbleArm;
+
+    // Continuous Servos to command the 2 intake wheels
+    protected CRServo intakeLeft;
+    protected CRServo intakeRight;
 
     protected BNO055IMU imu;
 
@@ -44,8 +54,13 @@ public abstract class BaseOpMode extends OpMode {
         // Create an array of the drive motors to easily pass into sub-methods
         driveMotorArray = new DcMotor[]{frontLeft, frontRight, backLeft, backRight};
 
-        //flyLeft = hardwareMap.get(DcMotor.class, "FlyLeft");
-        //flyRight = hardwareMap.get(DcMotor.class, "FlyRight");
+        flyLeft = hardwareMap.get(DcMotor.class, "flyLeft");
+        flyRight = hardwareMap.get(DcMotor.class, "flyRight");
+
+        wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
+
+        intakeLeft = hardwareMap.get(CRServo.class, "intakeLeft");
+        intakeRight = hardwareMap.get(CRServo.class, "intakeRight");
 
         // Control method that allows easier use of button inputs
         teleop = new TeleopControl();
@@ -73,6 +88,15 @@ public abstract class BaseOpMode extends OpMode {
         // Invert the right side
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // Invert the right shooter motor
+        flyRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // Invert the right intake servo
+        intakeRight.setDirection(CRServo.Direction.REVERSE);
+
+        // Set wobble arm motor to brake
+        wobbleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /**
