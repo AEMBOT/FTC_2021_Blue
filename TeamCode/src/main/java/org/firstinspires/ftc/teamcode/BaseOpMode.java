@@ -37,6 +37,12 @@ public abstract class BaseOpMode extends OpMode {
     protected CRServo intakeLeft;
     protected CRServo intakeRight;
 
+    // Generic DcMotor to command the indexer motor
+    protected DcMotor indexer;
+
+    // Generic Servo to command the wobble grabber
+    protected Servo wobbleServo;
+
     protected BNO055IMU imu;
 
     protected TeleopControl teleop;
@@ -61,6 +67,10 @@ public abstract class BaseOpMode extends OpMode {
 
         intakeLeft = hardwareMap.get(CRServo.class, "intakeLeft");
         intakeRight = hardwareMap.get(CRServo.class, "intakeRight");
+
+        indexer = hardwareMap.get(DcMotor.class, "indexer");
+
+        wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
 
         // Control method that allows easier use of button inputs
         teleop = new TeleopControl();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -11,9 +12,13 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
 @TeleOp(name = "BasicOpMode", group = "Test")
 public class BasicOpMode extends BaseOpMode {
 
-    private boolean intakeOn = false;
-    private boolean shooterOn = false;
+    private boolean intakeOn;
+    private boolean shooterOn;
+    private boolean indexerOn;
+    private boolean wobbleGrab;
     private double flywheelSpeed = .8;
+    private double indexerSpeed = .5;
+
 
     @Override
     public void loop() {
@@ -21,17 +26,20 @@ public class BasicOpMode extends BaseOpMode {
         teleop.runOncePerPress(gamepad1.a, () -> mecanumDrive.toggleSlowMode());
 
         // Toggles the shooter on or off
-        teleop.runOncePerPress(gamepad1.x, () -> shooterOn = !shooterOn);
+        teleop.runOncePerPress(gamepad2.x, () -> shooterOn = !shooterOn);
 
         // Toggles the intake on or off
-        teleop.runOncePerPress(gamepad1.y, () -> intakeOn = !intakeOn);
+        teleop.runOncePerPress(gamepad2.y, () -> intakeOn = !intakeOn);
+
+        //toggles the indexer on or off
+        teleop.runOncePerPress(gamepad2.b, () -> indexerOn = !indexerOn);
+
+        //toggles the wobble servo on and off
 
         if(shooterOn) {
             flyLeft.setPower(flywheelSpeed);
             flyRight.setPower(flywheelSpeed);
-        }
-
-        else{
+        } else {
             flyLeft.setPower(0);
             flyRight.setPower(0);
         }
@@ -39,19 +47,31 @@ public class BasicOpMode extends BaseOpMode {
         if(intakeOn) {
           intakeLeft.setPower(1);
           intakeRight.setPower(1);
-        }
-
-        else{
+        } else {
             intakeLeft.setPower(0);
             intakeRight.setPower(0);
         }
 
+        if(indexerOn) {
+            indexer.setPower(indexerSpeed);
+        } else {
+            indexer.setPower(0);
+        }
+
+        if(wobbleGrab) {
+            wobbleServo.setPosition(1);
+        } else {
+            wobbleServo.setPosition(0);
+        }
+
         wobbleArm.setPower(.4*gamepad2.right_stick_y);
+
+        telemetry.addData("yaw",getGyroYaw());
 
         // Send commands to the mecanum drive base
         // mecanumDrive.fieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, getGyroYaw());
 
-        mecanumDrive.nonFieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        mecanumDrive.nonFieldCentricControl(imu, gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         // Leave this here as it resets all the values for the next loop
         super.teleop.endPeriodic();
