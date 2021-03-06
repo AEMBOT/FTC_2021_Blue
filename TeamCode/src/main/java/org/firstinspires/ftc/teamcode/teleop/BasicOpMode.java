@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
 @TeleOp(name = "BasicOpMode", group = "Test")
 public class BasicOpMode extends BaseOpMode {
 
+    private final double WOBBLE_ARM_POWER_SCALAR = 0.4;
+
     private boolean intakeOn;
     private boolean shooterOn;
     private boolean indexerOn;
@@ -64,7 +66,7 @@ public class BasicOpMode extends BaseOpMode {
             wobbleServo.setPosition(0);
         }
 
-        wobbleArm.setPower(.4*gamepad2.right_stick_y);
+        wobbleArm.setPower(WOBBLE_ARM_POWER_SCALAR*gamepad2.right_stick_y);
 
         telemetry.addData("yaw",getGyroYaw());
 
