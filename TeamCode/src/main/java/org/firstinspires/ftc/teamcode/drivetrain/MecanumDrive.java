@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
 public class MecanumDrive {
 
     private final double TURN_SENSITIVITY = .8;
+    private final double HEADING_ADJUST_SCALAR = 22.5;
 
     // The current drive base speed multiplier
     private double speedMultiplier = 1;
@@ -49,10 +50,15 @@ public class MecanumDrive {
 
         double rotateTweak = 0;
 
-        if(RCW == 0 && (STR + FWD) != 0) {
+        // Uses thresholding to make sure this still evaluates correctly if the joystick is like 0.0001
+        if((RCW < 0.05 && RCW > -0.05) && (STR + FWD) != 0) {
 
             double headingError = (currentHeadingRadians - prevHeadingRadians);
 
+            /**
+             * NOTE: Please Switch to using PID at some point soon, this is a bang-bang approach and can/will result in overshooting in most instances
+             * I have migrated a useable PID library over from our FRC code
+             */
             if(headingError != 0) {
 
                 if (headingError > Math.PI) {
@@ -61,7 +67,7 @@ public class MecanumDrive {
                     headingError += (float)Math.PI;
                 }
 
-                rotateTweak = 22.5f * headingError;
+                rotateTweak = HEADING_ADJUST_SCALAR * headingError;
             }
         }
 
