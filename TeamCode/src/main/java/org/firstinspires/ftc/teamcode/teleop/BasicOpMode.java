@@ -18,7 +18,7 @@ public class BasicOpMode extends BaseOpMode {
     private boolean shooterOn;
     private boolean indexerOn;
     private boolean wobbleGrab;
-    private double flywheelSpeed = .8;
+    private double flywheelSpeed = .9;
     private double indexerSpeed = .5;
 
 
