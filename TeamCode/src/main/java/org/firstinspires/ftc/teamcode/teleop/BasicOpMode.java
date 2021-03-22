@@ -12,14 +12,14 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
 @TeleOp(name = "BasicOpMode", group = "Test")
 public class BasicOpMode extends BaseOpMode {
 
-    private final double WOBBLE_ARM_POWER_SCALAR = 0.4;
+    private final double WOBBLE_ARM_POWER_SCALAR = -.8;
 
     private boolean intakeOn;
     private boolean shooterOn;
     private boolean indexerOn;
     private boolean wobbleGrab;
-    private double flywheelSpeed = .9;
-    private double indexerSpeed = .5;
+    private double flywheelSpeed = .95;
+    private double indexerSpeed = 1;
 
 
     @Override
@@ -37,6 +37,7 @@ public class BasicOpMode extends BaseOpMode {
         teleop.runOncePerPress(gamepad2.b, () -> indexerOn = !indexerOn);
 
         //toggles the wobble servo on and off
+        teleop.runOncePerPress(gamepad2.a, () -> wobbleGrab = !wobbleGrab);
 
         if(shooterOn) {
             flyLeft.setPower(flywheelSpeed);
@@ -61,9 +62,9 @@ public class BasicOpMode extends BaseOpMode {
         }
 
         if(wobbleGrab) {
-            wobbleServo.setPosition(1);
-        } else {
             wobbleServo.setPosition(0);
+        } else {
+            wobbleServo.setPosition(.5);
         }
 
         wobbleArm.setPower(WOBBLE_ARM_POWER_SCALAR*gamepad2.right_stick_y);

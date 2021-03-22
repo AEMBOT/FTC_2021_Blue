@@ -107,6 +107,8 @@ public abstract class BaseOpMode extends OpMode {
 
         // Set wobble arm motor to brake
         wobbleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        indexer.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /**
