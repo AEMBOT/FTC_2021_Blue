@@ -53,7 +53,7 @@ public abstract class BaseOpMode extends OpMode {
 
     @Override
     public void init() {
-
+        super.msStuckDetectLoop = 10000;
         // Init all devices to corresponding mapping names
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");

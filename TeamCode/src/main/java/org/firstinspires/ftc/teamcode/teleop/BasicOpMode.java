@@ -36,7 +36,7 @@ public class BasicOpMode extends BaseOpMode {
         //toggles the indexer on or off
         teleop.runOncePerPress(gamepad2.b, () -> indexerOn = !indexerOn);
 
-        //toggles the wobble servo on and off
+        //toggles the wobble servo on and
         teleop.runOncePerPress(gamepad2.a, () -> wobbleGrab = !wobbleGrab);
 
         if(shooterOn) {
