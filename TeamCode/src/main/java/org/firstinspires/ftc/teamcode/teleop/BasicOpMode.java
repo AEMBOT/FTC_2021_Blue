@@ -74,8 +74,7 @@ public class BasicOpMode extends BaseOpMode {
         // Send commands to the mecanum drive base
         // mecanumDrive.fieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, getGyroYaw());
 
-        mecanumDrive.nonFieldCentricControl(imu, gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
+        mecanumDrive.nonFieldCentricControl(getGyroYaw(), gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         // Leave this here as it resets all the values for the next loop
         super.teleop.endPeriodic();
     }

@@ -166,7 +166,7 @@ public class PID {
     }
 
     /**
-     * Get the deired point
+     * Get the desired point
      * @return the desired point
      */
     public double getSetpoint(){

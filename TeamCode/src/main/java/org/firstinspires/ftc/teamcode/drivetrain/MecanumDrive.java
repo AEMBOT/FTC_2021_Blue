@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -45,8 +47,8 @@ public class MecanumDrive {
      * Non-Field centric drive is where all directions are relative to the robot as opposed to the driver, this means that when the robot's direction is
      * inverted left becomes right and vice-versa. This is annoying and thus field centric drive makes all directions relative to the driver and thus right will always be right and vice-versa
      */
-    public void nonFieldCentricControl(BNO055IMU imu, double FWD, double STR, double RCW) {
-        currentHeadingRadians = Math.toRadians(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+    public void nonFieldCentricControl(double imu, double FWD, double STR, double RCW) {
+        currentHeadingRadians = imu;
 
         double rotateTweak = 0;
 
@@ -110,6 +112,40 @@ public class MecanumDrive {
         for (int i = 0; i < motorValues.length; i++) {
             driveMotors[i].setPower(motorValues[i] * speedMultiplier);
         }
+    }
+
+    public void autoControl(double imu, double FWD, double STR, double RCW, double headingAdjust) {
+        currentHeadingRadians = imu;
+
+        double rotateTweak = 0;
+
+        // Uses a threshold to make sure this still evaluates correctly if the joystick is like 0.0001
+        if((RCW < 0.05 && RCW > -0.05) && (STR + FWD) != 0) {
+
+            double headingError = (currentHeadingRadians - prevHeadingRadians);
+
+            if(headingError != 0) {
+
+                if (headingError > Math.PI) {
+                    headingError -= (float)Math.PI;
+                } else if (headingError < -Math.PI) {
+                    headingError += (float)Math.PI;
+                }
+
+                rotateTweak = headingAdjust * headingError;
+            }
+        }
+
+        STR = -STR;
+        RCW = -(RCW + rotateTweak) * TURN_SENSITIVITY;
+        double[] motorValues = normalizeWheelSpeeds(FWD, STR, RCW);
+
+        // Loop through the motors values and supply the correct power to the correct motor
+        for (int i = 0; i < motorValues.length; i++) {
+            driveMotors[i].setPower(motorValues[i] * speedMultiplier);
+        }
+
+        prevHeadingRadians = currentHeadingRadians;
     }
 
     /**

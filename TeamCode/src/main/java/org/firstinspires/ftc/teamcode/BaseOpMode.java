@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -48,17 +49,16 @@ public abstract class BaseOpMode extends OpMode {
     protected TeleopControl teleop;
     protected MecanumDrive mecanumDrive;
 
+   // protected ColorSensor colorSensor;
+
     @Override
     public void init() {
 
-        // Init all motors to corresponding mapping names
+        // Init all devices to corresponding mapping names
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
-
-        // Create an array of the drive motors to easily pass into sub-methods
-        driveMotorArray = new DcMotor[]{frontLeft, frontRight, backLeft, backRight};
 
         flyLeft = hardwareMap.get(DcMotor.class, "flyLeft");
         flyRight = hardwareMap.get(DcMotor.class, "flyRight");
@@ -71,6 +71,11 @@ public abstract class BaseOpMode extends OpMode {
         indexer = hardwareMap.get(DcMotor.class, "indexer");
 
         wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
+
+        //colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+
+        // Create an array of the drive motors to easily pass into sub-methods
+        driveMotorArray = new DcMotor[]{frontLeft, frontRight, backLeft, backRight};
 
         // Control method that allows easier use of button inputs
         teleop = new TeleopControl();
@@ -110,6 +115,7 @@ public abstract class BaseOpMode extends OpMode {
 
         indexer.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
 
     /**
      * Get the angle of the robot via the gyro scope (in radians)
