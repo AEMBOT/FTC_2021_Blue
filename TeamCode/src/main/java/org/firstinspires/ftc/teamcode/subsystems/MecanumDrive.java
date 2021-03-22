@@ -1,15 +1,8 @@
-package org.firstinspires.ftc.teamcode.drivetrain;
+package org.firstinspires.ftc.teamcode.subsystems;
 
-import android.util.Log;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.BaseOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  *
@@ -30,17 +23,32 @@ public class MecanumDrive {
     public double backBias;
 
     // 0 - FrontLeft, 1 - FrontRight, 2 - BackLeft, 3 - BackRight
-    private DcMotor[] driveMotors;
+    private DcMotor frontLeft;
+    private DcMotor frontRight;
+    private DcMotor backRight;
+    private DcMotor backLeft;
+
+    private DcMotor[] driveMotors = {frontLeft, frontRight, backLeft, backRight};
 
     private double prevHeadingRadians = 0;
     private double currentHeadingRadians = 0;
     /**
      * Construct the mecanum drive class
      *
-     * @param driveMotors array of drive motors
+     * @param hardwareMap a reference to the hardware map from the OpMode
      */
-    public MecanumDrive(DcMotor[] driveMotors) {
-        this.driveMotors = driveMotors;
+    public MecanumDrive(HardwareMap hardwareMap) {
+
+        // Init all devices to corresponding mapping names
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+
+        // Invert the right side
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
     }
 
     /**

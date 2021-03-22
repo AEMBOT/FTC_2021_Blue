@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import org.firstinspires.ftc.teamcode.BaseOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
+import org.firstinspires.ftc.teamcode.utilities.Gyro;
 
 @Autonomous(name = "BasicAuto", group = "test")
-public class BasicAuto extends BaseOpMode{
+public class BasicAuto extends LinearOpMode {
 
     boolean autoStop = false;
 
@@ -12,39 +15,33 @@ public class BasicAuto extends BaseOpMode{
 
     double driveDistance = 0;
 
+    private MecanumDrive m_drive;
+    private Gyro m_gyro;
+
     @Override
-    public void loop() {
-        if (!autoStop) {
+    public void runOpMode() throws InterruptedException {
 
-            //Drive until the color sensor sees more blue than red (the shooting line)
-            //while(colorSensor.blue() < colorSensor.red()) {
-            //    Drive(1,0,0);
-            //}
+        m_drive = new MecanumDrive(hardwareMap);
+        m_gyro = Gyro.get(hardwareMap);
 
-            Drive(1, 0, 0);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        waitForStart();
 
-            Drive(0, 0, 0);
+        Drive(1, 0, 0);
 
-            Drive(-.5, 0, 0);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Drive(0, 0, 0);
+        Thread.sleep(5000);
 
-            autoStop = true;
+        Drive(0, 0, 0);
 
-        }
+        Drive(-.5, 0, 0);
+
+        Thread.sleep(500);
+
+        Drive(0, 0, 0);
+
     }
 
     public void Drive(double FWD, double STR, double RCW) {
-        mecanumDrive.autoControl(getGyroYaw(), FWD, STR, RCW, AUTONOMOUS_HEADING_ADJUST_SCALAR);
+        m_drive.autoControl(m_gyro.getGyroYaw(), FWD, STR, RCW, AUTONOMOUS_HEADING_ADJUST_SCALAR);
     }
 
 }

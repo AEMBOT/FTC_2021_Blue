@@ -1,16 +1,30 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.BaseOpMode;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.WobbleSubsystem;
+import org.firstinspires.ftc.teamcode.utilities.Gyro;
+import org.firstinspires.ftc.teamcode.utilities.TeleopControl;
 
 
 @TeleOp(name = "BasicOpMode", group = "Test")
-public class BasicOpMode extends BaseOpMode {
+public class BasicOpMode extends OpMode {
+
+    private final double FLYWHEEL_SPEED = .95;
+    private final double INDEXER_SPEED = 1;
+
+    // Create subsystems
+    private MecanumDrive m_drive;
+    private ShooterSubsystem m_shooter;
+    private IntakeSubsystem m_intake;
+    private WobbleSubsystem m_wobble;
+    private Gyro m_gyro;
+
+    private TeleopControl teleop;
 
     private final double WOBBLE_ARM_POWER_SCALAR = -.8;
 
@@ -18,65 +32,49 @@ public class BasicOpMode extends BaseOpMode {
     private boolean shooterOn;
     private boolean indexerOn;
     private boolean wobbleGrab;
-    private double flywheelSpeed = .95;
-    private double indexerSpeed = 1;
 
+
+
+    @Override
+    public void init() {
+        m_drive = new MecanumDrive(hardwareMap);
+        m_shooter = new ShooterSubsystem(hardwareMap, FLYWHEEL_SPEED, INDEXER_SPEED);
+        m_intake = new IntakeSubsystem(hardwareMap);
+        m_wobble = new WobbleSubsystem(hardwareMap);
+        m_gyro = Gyro.get(hardwareMap);
+
+        // Create button handler
+        teleop = new TeleopControl();
+    }
 
     @Override
     public void loop() {
         // Slow mode lambda toggle
-        teleop.runOncePerPress(gamepad1.a, () -> mecanumDrive.toggleSlowMode());
+        teleop.runOncePerPress(gamepad1.a, m_drive::toggleSlowMode);
 
         // Toggles the shooter on or off
-        teleop.runOncePerPress(gamepad2.x, () -> shooterOn = !shooterOn);
+        teleop.runOncePerPress(gamepad2.x, m_shooter::toggleShooter);
 
         // Toggles the intake on or off
-        teleop.runOncePerPress(gamepad2.y, () -> intakeOn = !intakeOn);
+        teleop.runOncePerPress(gamepad2.y, m_intake::toggleIntake);
 
         //toggles the indexer on or off
-        teleop.runOncePerPress(gamepad2.b, () -> indexerOn = !indexerOn);
+        teleop.runOncePerPress(gamepad2.b, m_shooter::toggleIndexer);
 
         //toggles the wobble servo on and
-        teleop.runOncePerPress(gamepad2.a, () -> wobbleGrab = !wobbleGrab);
+        teleop.runOncePerPress(gamepad2.a, m_wobble::toggleArmPosition);
 
-        if(shooterOn) {
-            flyLeft.setPower(flywheelSpeed);
-            flyRight.setPower(flywheelSpeed);
-        } else {
-            flyLeft.setPower(0);
-            flyRight.setPower(0);
-        }
+        m_wobble.runWobbleGrabber(WOBBLE_ARM_POWER_SCALAR*gamepad2.right_stick_y);
 
-        if(intakeOn) {
-          intakeLeft.setPower(1);
-          intakeRight.setPower(1);
-        } else {
-            intakeLeft.setPower(0);
-            intakeRight.setPower(0);
-        }
+        telemetry.addData("yaw", m_gyro.getGyroYaw());
 
-        if(indexerOn) {
-            indexer.setPower(indexerSpeed);
-        } else {
-            indexer.setPower(0);
-        }
+        // Will update motor commands
+        m_shooter.perodic();
+        m_intake.periodic();
+        m_drive.nonFieldCentricControl(m_gyro.getGyroYaw(), gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-        if(wobbleGrab) {
-            wobbleServo.setPosition(0);
-        } else {
-            wobbleServo.setPosition(.5);
-        }
-
-        wobbleArm.setPower(WOBBLE_ARM_POWER_SCALAR*gamepad2.right_stick_y);
-
-        telemetry.addData("yaw",getGyroYaw());
-
-        // Send commands to the mecanum drive base
-        // mecanumDrive.fieldCentricControl(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, getGyroYaw());
-
-        mecanumDrive.nonFieldCentricControl(getGyroYaw(), gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         // Leave this here as it resets all the values for the next loop
-        super.teleop.endPeriodic();
+        teleop.endPeriodic();
     }
 
 
