@@ -72,9 +72,9 @@ public class BasicOpMode extends OpMode {
         m_shooter.perodic();
         m_intake.periodic();
         m_drive.nonFieldCentricControl(m_gyro.getGyroYaw(), gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
         // Leave this here as it resets all the values for the next loop
         teleop.endPeriodic();
+
     }
 
 

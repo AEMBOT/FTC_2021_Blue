@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  *
  * Handles control of a mecanum drive base with field centric control
@@ -28,7 +30,7 @@ public class MecanumDrive {
     private DcMotor backRight;
     private DcMotor backLeft;
 
-    private DcMotor[] driveMotors = {frontLeft, frontRight, backLeft, backRight};
+    private DcMotor[] driveMotors;
 
     private double prevHeadingRadians = 0;
     private double currentHeadingRadians = 0;
@@ -44,6 +46,13 @@ public class MecanumDrive {
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+
+        driveMotors = new DcMotor[4];
+        driveMotors[0] = frontLeft;
+        driveMotors[1] = frontRight;
+        driveMotors[2] = backLeft;
+        driveMotors[3] = backRight;
+
 
         // Invert the right side
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);

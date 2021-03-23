@@ -60,7 +60,7 @@ public class ShooterSubsystem {
             indexerWheel.setPower(1);
         }
         else{
-            indexerWheel.setPower(1);
+            indexerWheel.setPower(0);
         }
     }
 
