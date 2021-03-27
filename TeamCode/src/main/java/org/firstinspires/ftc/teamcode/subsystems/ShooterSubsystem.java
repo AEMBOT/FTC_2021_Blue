@@ -73,5 +73,9 @@ public class ShooterSubsystem {
         flywheelRight.setPower(power);
     }
 
+    public void runIndexer(double power){
+        indexerWheel.setPower(power);
+    }
+
 
 }
