@@ -13,13 +13,13 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@TeleOp
+@TeleOp (name = "Rings", group = "test")
 public class EasyOpenCVExample extends LinearOpMode
 {
+    boolean isOk = false;
 
     OpenCvWebcam webcam;
     RingDeterminationPipeline pipeline;
@@ -29,25 +29,40 @@ public class EasyOpenCVExample extends LinearOpMode
     {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new RingDeterminationPipeline();
         webcam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+        // webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(320   ,240, OpenCvCameraRotation.UPRIGHT);
+
+                isOk = true;
+                try {
+                    webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                } catch(Exception e) {
+                    isOk = false;
+                }
+
+                if(isOk) telemetry.addLine("OK");
+
+                else telemetry.addLine("ERROR");
+
+                telemetry.update();
             }
         });
 
+
+
         waitForStart();
+
 
         while (opModeIsActive())
         {
@@ -62,6 +77,7 @@ public class EasyOpenCVExample extends LinearOpMode
 
     public static class RingDeterminationPipeline extends OpenCvPipeline
     {
+
         /*
          * An enum to define the ring position
          */
@@ -81,10 +97,10 @@ public class EasyOpenCVExample extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(215,100);
 
-        static final int REGION_WIDTH = 35;
-        static final int REGION_HEIGHT = 25;
+        static final int REGION_WIDTH = 65;
+        static final int REGION_HEIGHT = 65;
 
         final int FOUR_RING_THRESHOLD = 150;
         final int ONE_RING_THRESHOLD = 135;
@@ -105,7 +121,7 @@ public class EasyOpenCVExample extends LinearOpMode
         int avg1;
 
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile RingPosition position = RingPosition.FOUR;
+        public static volatile RingPosition position = RingPosition.FOUR;
 
         /*
          * This function takes the RGB frame, converts to YCrCb,
@@ -153,7 +169,7 @@ public class EasyOpenCVExample extends LinearOpMode
                     region1_pointA, // First point which defines the rectangle
                     region1_pointB, // Second point which defines the rectangle
                     GREEN, // The color the rectangle is drawn in
-                    -1); // Negative thickness means solid fill
+                    1); // Negative thickness means solid fill
 
             return input;
         }
