@@ -4,15 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.teleop.EasyOpenCVExample;
 import org.firstinspires.ftc.teamcode.subsystems.EncoderControl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WobbleSubsystem;
 import org.firstinspires.ftc.teamcode.utilities.Gyro;
+import org.firstinspires.ftc.teamcode.subsystems.RingDeterminationSubsystem;
+import org.firstinspires.ftc.teamcode.utilities.RingDeterminationPipeline;
 
-import static org.firstinspires.ftc.teamcode.teleop.EasyOpenCVExample.*;
-import static org.firstinspires.ftc.teamcode.teleop.EasyOpenCVExample.RingDeterminationPipeline.RingPosition.*;
+
 
 @Autonomous(name = "BasicAuto", group = "test")
 public class BasicAuto extends LinearOpMode {
@@ -22,7 +22,7 @@ public class BasicAuto extends LinearOpMode {
     private EncoderControl m_eDrive;
     private ShooterSubsystem m_shoot;
     private WobbleSubsystem m_wobble;
-    private EasyOpenCVExample m_analyze;
+    private RingDeterminationSubsystem m_ring;
 
     double flywheelPower;
     double indexerSpeed;
@@ -40,19 +40,19 @@ public class BasicAuto extends LinearOpMode {
         m_eDrive = new EncoderControl(hardwareMap);
         m_shoot = new ShooterSubsystem(hardwareMap, flywheelPower, indexerSpeed);
         m_wobble = new WobbleSubsystem(hardwareMap);
-        m_analyze = new EasyOpenCVExample();
+        m_ring = new RingDeterminationSubsystem(hardwareMap, telemetry);
 
         waitForStart();
 
         switch(RingDeterminationPipeline.position) {
             case NONE:
-                telemetry.addData(String.valueOf(NONE),"Rings");
+                //telemetry.addData(String.valueOf(NONE),"Rings");
                 break;
             case ONE:
-                telemetry.addData(String.valueOf(ONE),"Rings");
+                //telemetry.addData(String.valueOf(ONE),"Rings");
                 break;
             case FOUR:
-                telemetry.addData(String.valueOf(FOUR),"Rings");
+                //telemetry.addData(String.valueOf(FOUR),"Rings");
                 break;
             default:
                 wobbleHolder.setPosition(.5);
