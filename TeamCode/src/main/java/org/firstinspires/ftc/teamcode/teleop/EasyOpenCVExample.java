@@ -17,6 +17,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 public class EasyOpenCVExample extends LinearOpMode
 {
+
     boolean isOk = false;
 
     OpenCvWebcam webcam;

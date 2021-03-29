@@ -16,14 +16,14 @@ public class RingDeterminationSubsystem {
     boolean isOk = false;
 
     OpenCvWebcam webcam;
-    EasyOpenCVExample.RingDeterminationPipeline pipeline;
+    RingDeterminationPipeline pipeline;
 
     public RingDeterminationSubsystem(HardwareMap hardwareMap, Telemetry telemetry)
     {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new EasyOpenCVExample.RingDeterminationPipeline();
+        pipeline = new RingDeterminationPipeline();
         webcam.setPipeline(pipeline);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -46,5 +46,9 @@ public class RingDeterminationSubsystem {
                 telemetry.update();
             }
         });
+    }
+
+    public RingDeterminationPipeline.RingPosition getPosition() {
+        return pipeline.getPosition();
     }
 }

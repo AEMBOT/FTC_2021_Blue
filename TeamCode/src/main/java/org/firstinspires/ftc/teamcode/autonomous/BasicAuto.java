@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.internal.system.ThreadBorrowingExecutor;
 import org.firstinspires.ftc.teamcode.subsystems.EncoderControl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -44,15 +45,15 @@ public class BasicAuto extends LinearOpMode {
 
         waitForStart();
 
-        switch(RingDeterminationPipeline.position) {
+        switch(m_ring.getPosition()) {
             case NONE:
-                //telemetry.addData(String.valueOf(NONE),"Rings");
+                telemetry.addData(String.valueOf(RingDeterminationPipeline.RingPosition.NONE),"Rings");
                 break;
             case ONE:
-                //telemetry.addData(String.valueOf(ONE),"Rings");
+                telemetry.addData(String.valueOf(RingDeterminationPipeline.RingPosition.ONE),"Rings");
                 break;
             case FOUR:
-                //telemetry.addData(String.valueOf(FOUR),"Rings");
+                telemetry.addData(String.valueOf(RingDeterminationPipeline.RingPosition.FOUR),"Rings");
                 break;
             default:
                 wobbleHolder.setPosition(.5);
@@ -80,8 +81,13 @@ public class BasicAuto extends LinearOpMode {
                 Thread.sleep(500);
 
                 m_eDrive.encoderDrive(.5, 24,24,telemetry);
-                // code block
+
         }
+
+        telemetry.addLine("DONE");
+        telemetry.update();
+
+        Thread.sleep(10000);
     }
 
 }
