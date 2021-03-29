@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.EncoderControl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -47,6 +48,10 @@ public class BasicAuto extends LinearOpMode {
         switch(m_ring.getPosition()) {
             case NONE:
                 //Target zone A
+                telemetry.addLine("No rings detected: Target zone A");
+                telemetry.update();
+                Thread.sleep(500);
+
                 wobbleHolder.setPosition(.5);
 
                 m_eDrive.encoderStrafe(.5,-12,telemetry);
@@ -70,6 +75,10 @@ public class BasicAuto extends LinearOpMode {
                 break;
             case ONE:
                 //Target zone B
+                telemetry.addLine("One ring detected: Target zone B");
+                telemetry.update();
+                Thread.sleep(500);
+
                 wobbleHolder.setPosition(.5);
 
                 m_eDrive.encoderDrive(.5,78,78, telemetry);
@@ -89,6 +98,10 @@ public class BasicAuto extends LinearOpMode {
                 break;
             case FOUR:
                 //Target zone C
+                telemetry.addLine("Four rings detected: Target zone C");
+                telemetry.update();
+                Thread.sleep(500);
+
                 wobbleHolder.setPosition(.5);
 
                 m_eDrive.encoderStrafe(.5,-12, telemetry);
@@ -110,6 +123,11 @@ public class BasicAuto extends LinearOpMode {
 
                 break;
             default:
+                telemetry.addLine("Ring Determination Failed!");
+                telemetry.addLine("Resulting to default");
+                telemetry.update();
+                Thread.sleep(500);
+
                 wobbleHolder.setPosition(.5);
 
                 m_eDrive.encoderDrive(.5, 70,70, telemetry);

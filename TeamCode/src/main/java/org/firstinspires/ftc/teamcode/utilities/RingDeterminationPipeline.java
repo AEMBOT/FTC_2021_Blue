@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import org.firstinspires.ftc.teamcode.teleop.EasyOpenCVExample;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
