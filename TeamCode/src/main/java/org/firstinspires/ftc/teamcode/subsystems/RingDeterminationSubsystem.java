@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 public class RingDeterminationSubsystem {
 
-    boolean isOk = false;
+    public boolean isOk = false;
 
     OpenCvWebcam webcam;
     RingDeterminationPipeline pipeline;

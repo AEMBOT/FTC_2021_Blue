@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WobbleSubsystem;
 import org.firstinspires.ftc.teamcode.utilities.Gyro;
 import org.firstinspires.ftc.teamcode.subsystems.RingDeterminationSubsystem;
-import org.firstinspires.ftc.teamcode.utilities.RingDeterminationPipeline;
 
 
 
@@ -24,14 +23,15 @@ public class BasicAuto extends LinearOpMode {
     private WobbleSubsystem m_wobble;
     private RingDeterminationSubsystem m_ring;
 
-    double flywheelPower;
-    double indexerSpeed;
+    double flywheelPower = 1;
+    double indexerSpeed = .5;
 
     private Servo wobbleHolder;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+
 
         wobbleHolder = hardwareMap.get(Servo.class, "wobbleHolder");
 
@@ -46,13 +46,68 @@ public class BasicAuto extends LinearOpMode {
 
         switch(m_ring.getPosition()) {
             case NONE:
-                telemetry.addData(String.valueOf(RingDeterminationPipeline.RingPosition.NONE),"Rings");
+                //Target zone A
+                wobbleHolder.setPosition(.5);
+
+                m_eDrive.encoderStrafe(.5,-12,telemetry);
+
+                m_eDrive.encoderDrive(.5, 70,70, telemetry);
+                Thread.sleep(500);
+
+                wobbleHolder.setPosition(1);
+                Thread.sleep(1000);
+
+                m_eDrive.encoderDrive(.75, -22,-22, telemetry);
+                Thread.sleep(500);
+
+                m_eDrive.encoderStrafe(1,22,telemetry);
+                Thread.sleep(500);
+
+                runShooter();
+
+                m_eDrive.encoderDrive(.5, 24,24,telemetry);
+
                 break;
             case ONE:
-                telemetry.addData(String.valueOf(RingDeterminationPipeline.RingPosition.ONE),"Rings");
+                //Target zone B
+                wobbleHolder.setPosition(.5);
+
+                m_eDrive.encoderDrive(.5,78,78, telemetry);
+
+                m_eDrive.encoderStrafe(.5,14, telemetry);
+                Thread.sleep(500);
+
+                wobbleHolder.setPosition(1);
+                Thread.sleep(1000);
+
+                m_eDrive.encoderDrive(1,-30,-30, telemetry);
+
+                runShooter();
+
+                m_eDrive.encoderDrive(.5, 18,18,telemetry);
+
                 break;
             case FOUR:
-                telemetry.addData(String.valueOf(RingDeterminationPipeline.RingPosition.FOUR),"Rings");
+                //Target zone C
+                wobbleHolder.setPosition(.5);
+
+                m_eDrive.encoderStrafe(.5,-12, telemetry);
+
+                m_eDrive.encoderDrive(.5,112,112, telemetry);
+                Thread.sleep(500);
+
+                wobbleHolder.setPosition(1);
+                Thread.sleep(1000);
+
+                m_eDrive.encoderDrive(1,-64,-64, telemetry);
+
+                m_eDrive.encoderStrafe(1,22,telemetry);
+                Thread.sleep(500);
+
+                runShooter();
+
+                m_eDrive.encoderDrive(.5, 24,24,telemetry);
+
                 break;
             default:
                 wobbleHolder.setPosition(.5);
@@ -85,8 +140,18 @@ public class BasicAuto extends LinearOpMode {
 
         telemetry.addLine("DONE");
         telemetry.update();
+    }
 
-        Thread.sleep(10000);
+    public void runShooter() throws InterruptedException {
+        m_shoot.runShooter(flywheelPower);
+        Thread.sleep(500);
+
+        m_shoot.runIndexer(indexerSpeed);
+        Thread.sleep(3000);
+
+        m_shoot.runShooter(0);
+        m_shoot.runShooter(0);
+        Thread.sleep(500);
     }
 
 }
