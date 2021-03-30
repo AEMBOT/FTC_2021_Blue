@@ -4,17 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.EncoderControl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.RingDeterminationSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WobbleSubsystem;
 import org.firstinspires.ftc.teamcode.utilities.Gyro;
-import org.firstinspires.ftc.teamcode.subsystems.RingDeterminationSubsystem;
 
 
 
-@Autonomous(name = "BasicAuto", group = "test")
+@Autonomous(name = "BasicAuto", group = "main")
 public class BasicAuto extends LinearOpMode {
 
     private MecanumDrive m_drive;
@@ -24,7 +23,7 @@ public class BasicAuto extends LinearOpMode {
     private WobbleSubsystem m_wobble;
     private RingDeterminationSubsystem m_ring;
 
-    double flywheelPower = 1;
+    double flywheelPower = .93;
     double indexerSpeed = .5;
 
     private Servo wobbleHolder;
@@ -56,13 +55,13 @@ public class BasicAuto extends LinearOpMode {
 
                 m_eDrive.encoderStrafe(.5,-12,telemetry);
 
-                m_eDrive.encoderDrive(.5, 70,70, telemetry);
+                m_eDrive.encoderDrive(.5, 46,46, telemetry);
                 Thread.sleep(500);
 
                 wobbleHolder.setPosition(1);
                 Thread.sleep(1000);
 
-                m_eDrive.encoderDrive(.75, -22,-22, telemetry);
+                m_eDrive.encoderDrive(.75, -4,-4, telemetry);
                 Thread.sleep(500);
 
                 m_eDrive.encoderStrafe(1,22,telemetry);
@@ -70,7 +69,7 @@ public class BasicAuto extends LinearOpMode {
 
                 runShooter();
 
-                m_eDrive.encoderDrive(.5, 24,24,telemetry);
+                m_eDrive.encoderDrive(.5, 22,22,telemetry);
 
                 break;
             case ONE:
@@ -81,7 +80,7 @@ public class BasicAuto extends LinearOpMode {
 
                 wobbleHolder.setPosition(.5);
 
-                m_eDrive.encoderDrive(.5,78,78, telemetry);
+                m_eDrive.encoderDrive(.5,74,74, telemetry);
 
                 m_eDrive.encoderStrafe(.5,14, telemetry);
                 Thread.sleep(500);
@@ -89,7 +88,7 @@ public class BasicAuto extends LinearOpMode {
                 wobbleHolder.setPosition(1);
                 Thread.sleep(1000);
 
-                m_eDrive.encoderDrive(1,-30,-30, telemetry);
+                m_eDrive.encoderDrive(1,-26,-26, telemetry);
 
                 runShooter();
 
@@ -162,10 +161,10 @@ public class BasicAuto extends LinearOpMode {
 
     public void runShooter() throws InterruptedException {
         m_shoot.runShooter(flywheelPower);
-        Thread.sleep(500);
+        Thread.sleep(1500);
 
         m_shoot.runIndexer(indexerSpeed);
-        Thread.sleep(3000);
+        Thread.sleep(4000);
 
         m_shoot.runShooter(0);
         m_shoot.runShooter(0);

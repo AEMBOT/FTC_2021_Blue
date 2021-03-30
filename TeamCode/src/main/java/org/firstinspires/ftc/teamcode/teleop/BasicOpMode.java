@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utilities.Gyro;
 import org.firstinspires.ftc.teamcode.utilities.TeleopControl;
 
 
-@TeleOp(name = "BasicOpMode", group = "Test")
+@TeleOp(name = "BasicOpMode", group = "main")
 public class BasicOpMode extends OpMode {
 
     private final double FLYWHEEL_SPEED = .95;

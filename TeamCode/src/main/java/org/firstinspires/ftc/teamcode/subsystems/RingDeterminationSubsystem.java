@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.utilities.RingDeterminationPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvSwitchableWebcam;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 public class RingDeterminationSubsystem {
@@ -25,6 +26,8 @@ public class RingDeterminationSubsystem {
         pipeline = new RingDeterminationPipeline();
         webcam.setPipeline(pipeline);
 
+
+
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -38,9 +41,9 @@ public class RingDeterminationSubsystem {
                     isOk = false;
                 }
 
-                if(isOk) telemetry.addLine("OK");
+                if(isOk) telemetry.addLine("Webcam initialization successful!");
 
-                else telemetry.addLine("ERROR");
+                else telemetry.addLine("ERROR: Webcam initialization failed!");
 
                 telemetry.update();
             }
