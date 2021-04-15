@@ -15,6 +15,7 @@ public class ShooterSubsystem {
 
     private boolean shooterEnabled = false;
     private boolean indexerEnabled = false;
+    private boolean ejectEnabled = false;
 
     public ShooterSubsystem(HardwareMap hardwareMap, double flywheelPower, double indexerSpeed){
         flywheelLeft = hardwareMap.get(DcMotor.class, "flyLeft");
@@ -22,7 +23,7 @@ public class ShooterSubsystem {
 
         indexerWheel = hardwareMap.get(DcMotor.class, "indexer");
 
-        // Invert the indexer motor
+        //Invert the indexer motor
         indexerWheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Invert the right shooter motor
@@ -43,10 +44,12 @@ public class ShooterSubsystem {
         indexerEnabled = !indexerEnabled;
     }
 
+    public void toggleEject() {ejectEnabled = !ejectEnabled; }
+
     /**
      * Called during the loop
      */
-    public void perodic(){
+    public void periodic(){
         if (shooterEnabled){
             flywheelLeft.setPower(flywheelPower);
             flywheelRight.setPower(flywheelPower);
@@ -58,6 +61,9 @@ public class ShooterSubsystem {
 
         if(indexerEnabled){
             indexerWheel.setPower(1);
+        }
+        else if(ejectEnabled){
+            indexerWheel.setPower(-1);
         }
         else{
             indexerWheel.setPower(0);

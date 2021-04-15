@@ -24,6 +24,9 @@ public class MecanumDrive {
     // The current back wheel bias
     public double backBias;
 
+    private double invert = 1;
+    private boolean invertEnabled = false;
+
     // 0 - FrontLeft, 1 - FrontRight, 2 - BackLeft, 3 - BackRight
     private DcMotor frontLeft;
     private DcMotor frontRight;
@@ -34,6 +37,20 @@ public class MecanumDrive {
 
     private double prevHeadingRadians = 0;
     private double currentHeadingRadians = 0;
+
+    public void toggleInvert(){
+        invertEnabled = !invertEnabled;
+    }
+
+    public void periodic(){
+        if(invertEnabled){
+            invert = -1;
+        }
+        else{
+            invert = 1;
+        }
+    }
+
     /**
      * Construct the mecanum drive class
      *
@@ -186,10 +203,10 @@ public class MecanumDrive {
      * @return list of wheel speeds to feed into the motors
      */
     public double[] normalizeWheelSpeeds(double FWD, double STR, double RCW) {
-        double front_left = FWD + RCW + STR;
-        double front_right = FWD - RCW - STR;
-        double back_left = (FWD + RCW - STR*backBias);
-        double back_right = (FWD - RCW + STR*backBias);
+        double front_left = FWD*invert + RCW + STR*invert;
+        double front_right = FWD*invert - RCW - STR*invert;
+        double back_left = (FWD*invert + RCW - STR*backBias*invert);
+        double back_right = (FWD*invert - RCW + STR*backBias*invert);
 
         if (Math.abs(STR) > .05) {
             backBias = .75;

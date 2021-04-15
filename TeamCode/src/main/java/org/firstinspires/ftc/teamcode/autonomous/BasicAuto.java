@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.EncoderControl;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RingDeterminationSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
@@ -22,9 +23,10 @@ public class BasicAuto extends LinearOpMode {
     private ShooterSubsystem m_shoot;
     private WobbleSubsystem m_wobble;
     private RingDeterminationSubsystem m_ring;
+    private IntakeSubsystem m_intake;
 
     double flywheelPower = .93;
-    double indexerSpeed = .5;
+    double indexerSpeed = 1;
 
     private Servo wobbleHolder;
 
@@ -41,6 +43,7 @@ public class BasicAuto extends LinearOpMode {
         m_shoot = new ShooterSubsystem(hardwareMap, flywheelPower, indexerSpeed);
         m_wobble = new WobbleSubsystem(hardwareMap);
         m_ring = new RingDeterminationSubsystem(hardwareMap, telemetry);
+        m_intake = new IntakeSubsystem(hardwareMap);
 
         waitForStart();
 
@@ -91,6 +94,18 @@ public class BasicAuto extends LinearOpMode {
                 m_eDrive.encoderDrive(1,-26,-26, telemetry);
 
                 runShooter();
+                Thread.sleep(4500);
+
+                m_intake.runIntake(1);
+                Thread.sleep(1000);
+
+                m_eDrive.encoderDrive(.2, -24,-24, telemetry);
+                Thread.sleep(2000);
+
+                m_eDrive.encoderDrive(.5, 24,24, telemetry);
+
+                runShooter();
+                Thread.sleep(4500);
 
                 m_eDrive.encoderDrive(.5, 18,18,telemetry);
 
@@ -114,7 +129,7 @@ public class BasicAuto extends LinearOpMode {
                 m_eDrive.encoderDrive(1,-64,-64, telemetry);
 
                 m_eDrive.encoderStrafe(1,22,telemetry);
-                Thread.sleep(500);
+                Thread.sleep(1000);
 
                 runShooter();
 
@@ -161,10 +176,10 @@ public class BasicAuto extends LinearOpMode {
 
     public void runShooter() throws InterruptedException {
         m_shoot.runShooter(flywheelPower);
-        Thread.sleep(1500);
+        Thread.sleep(2000);
 
         m_shoot.runIndexer(indexerSpeed);
-        Thread.sleep(4000);
+        Thread.sleep(2000);
 
         m_shoot.runShooter(0);
         m_shoot.runShooter(0);

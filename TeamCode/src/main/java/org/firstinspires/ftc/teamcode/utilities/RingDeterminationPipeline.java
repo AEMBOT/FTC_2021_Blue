@@ -30,13 +30,13 @@ public class RingDeterminationPipeline extends OpenCvPipeline
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(180,110);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(130,110);
 
-    static final int REGION_WIDTH = 65;
+    static final int REGION_WIDTH = 55;
     static final int REGION_HEIGHT = 65;
 
     final int FOUR_RING_THRESHOLD = 150;
-    final int ONE_RING_THRESHOLD = 135;
+    final int ONE_RING_THRESHOLD = 110;
 
     Point region1_pointA = new Point(
             REGION1_TOPLEFT_ANCHOR_POINT.x,

@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class WobbleSubsystem {
 
     private DcMotor wobbleArm;
@@ -17,7 +19,6 @@ public class WobbleSubsystem {
 
         // Set wobble arm motor to brake
         wobbleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
     }
 
     /**
@@ -36,9 +37,10 @@ public class WobbleSubsystem {
 
     /**
      * Runs the wobble grabber at a set power
-     * @param power duty cycle to run the wobble grabber at
+     * @param position target position for the wobble arm.
      */
-    public void runWobbleGrabber(double power){
-        wobbleArm.setPower(power);
+    public void runWobbleGrabber(int position, Telemetry telemetry){
+        wobbleArm.setTargetPosition(position);
     }
+
 }

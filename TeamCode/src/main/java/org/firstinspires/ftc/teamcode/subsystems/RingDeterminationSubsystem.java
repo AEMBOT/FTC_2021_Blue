@@ -50,6 +50,7 @@ public class RingDeterminationSubsystem {
         });
     }
 
+
     public RingDeterminationPipeline.RingPosition getPosition() {
         return pipeline.getPosition();
     }

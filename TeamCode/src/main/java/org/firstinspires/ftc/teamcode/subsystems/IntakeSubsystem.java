@@ -9,6 +9,7 @@ public class IntakeSubsystem {
     private CRServo intakeRight;
 
     private boolean intakeEnabled = false;
+    private boolean ejectEnabled = false;
     public IntakeSubsystem(HardwareMap hardwareMap){
         intakeLeft = hardwareMap.get(CRServo.class, "intakeLeft");
         intakeRight = hardwareMap.get(CRServo.class, "intakeRight");
@@ -24,6 +25,10 @@ public class IntakeSubsystem {
         intakeEnabled = !intakeEnabled;
     }
 
+    public void toggleEject(){
+        ejectEnabled = !ejectEnabled;
+    }
+
     /**
      * Called every loop to update motor commands
      */
@@ -32,11 +37,17 @@ public class IntakeSubsystem {
             intakeLeft.setPower(1);
             intakeRight.setPower(1);
         }
+        else if(ejectEnabled){
+            intakeLeft.setPower(-1);
+            intakeRight.setPower(-1);
+        }
         else{
             intakeLeft.setPower(0);
             intakeRight.setPower(0);
         }
     }
+
+
 
     public void runIntake(double power){
         intakeRight.setPower(power);
